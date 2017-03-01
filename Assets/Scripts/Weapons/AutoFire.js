@@ -10,6 +10,13 @@ var firing : boolean = false;
 var damagePerSecond : float = 20.0;
 var forcePerSecond : float = 20.0;
 var hitSoundVolume : float = 0.5;
+public var HeatSlider : UnityEngine.UI.Slider;
+var heat: float = 2;
+var heatSpeed: float = 5;
+var coolingRate: float = 1;
+var maxHeat: float = 75;
+var unjamTemp: float = 30;
+var jammed: boolean = false;
 
 var muzzleFlashFront : GameObject;
 
@@ -25,7 +32,8 @@ function Awake () {
 }
 
 function Update () {
-	if (firing) {
+
+    
 
 		if (Time.time > lastFireTime + 1 / frequency) {
 			// Spawn visual bullet
@@ -75,6 +83,10 @@ function OnStartFire () {
 
 	if (audio)
 		audio.Play ();
+    //disable the muzzleflash if gun becomes jammed
+	if (jammed == true){
+	    OnStopFire ();
+	}
 }
 
 function OnStopFire () {
