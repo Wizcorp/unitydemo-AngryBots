@@ -10,6 +10,7 @@ var firing : boolean = false;
 var damagePerSecond : float = 20.0;
 var forcePerSecond : float = 20.0;
 var hitSoundVolume : float = 0.5;
+//HeatBar variables below
 public var HeatSlider : UnityEngine.UI.Slider;
 var heat: float = 2;
 var heatSpeed: float = 5;
@@ -33,7 +34,33 @@ function Awake () {
 
 function Update () {
 
+    //if not firing cool the gun by cooling rate
+    if (firing == false && heat > 0){
+    heat -= coolingRate;
+    }
+
+    //if you fill the heat bar the gun will jam.
+    if (heat > maxHeat || jammed ==true){
+        
+        jammed = true;
+        HeatSlider.colors.normalColor = Color.red;
+        OnStopFire ();
+        
+    }
+
+    //test to see if the gun can start to fire again, if it can unjam it.
+    if (jammed == true){
+        if (heat < unjamTemp){
+            jammed = false;
+            HeatSlider.colors.normalColor =  new Color(255, 195, 0, 255);
+        }
+    }
+
+    //Update the heatslider
+    HeatSlider.value = heat;
     
+    
+    if (firing && jammed == false) {
 
 		if (Time.time > lastFireTime + 1 / frequency) {
 			// Spawn visual bullet
@@ -70,19 +97,24 @@ function Update () {
 				bullet.dist = 1000;
 			}
 		}
+	    //Heat the gun.
+		heat += heatSpeed ;
 	}
 }
 
 function OnStartFire () {
-	if (Time.timeScale == 0)
+    if (Time.timeScale == 0)
 		return;
+    
+    //added check to make sure gun isn't jammed before starting fire
+    if (jammed == false){
+        firing = true;
+	    muzzleFlashFront.SetActive (true);
 
-	firing = true;
-
-	muzzleFlashFront.SetActive (true);
-
-	if (audio)
-		audio.Play ();
+	    if (audio)
+	        audio.Play ();
+	}
+    
     //disable the muzzleflash if gun becomes jammed
 	if (jammed == true){
 	    OnStopFire ();
