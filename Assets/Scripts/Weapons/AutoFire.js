@@ -35,30 +35,27 @@ function Awake () {
 function Update () {
 
     //if not firing cool the gun by cooling rate
-    if (firing == false && heat > 0){
+    if (firing == false && heat > 0) {
     heat -= coolingRate;
     }
 
     //if you fill the heat bar the gun will jam.
-    if (heat > maxHeat || jammed ==true){
-        
+    if (heat > maxHeat || jammed == true) {   
         jammed = true;
         HeatSlider.colors.normalColor = Color.red;
-        OnStopFire ();
-        
+        OnStopFire ();   
     }
 
     //test to see if the gun can start to fire again, if it can unjam it.
-    if (jammed == true){
-        if (heat < unjamTemp){
+    if (jammed == true) {
+        if (heat < unjamTemp) {
             jammed = false;
             HeatSlider.colors.normalColor =  new Color(255, 195, 0, 255);
         }
     }
 
     //Update the heatslider
-    HeatSlider.value = heat;
-    
+    HeatSlider.value = heat;   
     
     if (firing && jammed == false) {
 
@@ -103,29 +100,26 @@ function Update () {
 }
 
 function OnStartFire () {
-    if (Time.timeScale == 0)
-		return;
+    if (Time.timeScale == 0){
+        return;
+    }
     
     //added check to make sure gun isn't jammed before starting fire
-    if (jammed == false){
+    if (jammed == false) {
         firing = true;
 	    muzzleFlashFront.SetActive (true);
-
-	    if (audio)
+	    if (audio){
 	        audio.Play ();
-	}
-    
-    //disable the muzzleflash if gun becomes jammed
-	if (jammed == true){
-	    OnStopFire ();
-	}
+	    }
+	}    
 }
 
 function OnStopFire () {
-	firing = false;
+    firing = false;
 
-	muzzleFlashFront.SetActive (false);
+    muzzleFlashFront.SetActive (false);
 
-	if (audio)
-		audio.Stop ();
+	if (audio){
+	    audio.Stop ();
+	}
 }
