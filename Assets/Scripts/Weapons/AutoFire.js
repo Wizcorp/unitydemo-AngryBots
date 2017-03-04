@@ -10,6 +10,14 @@ var firing : boolean = false;
 var damagePerSecond : float = 20.0;
 var forcePerSecond : float = 20.0;
 var hitSoundVolume : float = 0.5;
+//HeatBar variables below
+public var HeatSlider : UnityEngine.UI.Slider;
+var heat: float = 2;
+var heatSpeed: float = 5;
+var coolingRate: float = 1;
+var maxHeat: float = 75;
+var unjamTemp: float = 30;
+var jammed: boolean = false;
 
 var muzzleFlashFront : GameObject;
 
@@ -25,7 +33,31 @@ function Awake () {
 }
 
 function Update () {
-	if (firing) {
+
+    //if not firing cool the gun by cooling rate
+    if (firing == false && heat > 0) {
+    heat -= coolingRate;
+    }
+
+    //if you fill the heat bar the gun will jam.
+    if (heat > maxHeat || jammed == true) {   
+        jammed = true;
+        HeatSlider.colors.normalColor = Color.red;
+        OnStopFire ();   
+    }
+
+    //test to see if the gun can start to fire again, if it can unjam it.
+    if (jammed == true) {
+        if (heat < unjamTemp) {
+            jammed = false;
+            HeatSlider.colors.normalColor =  new Color(255, 195, 0, 255);
+        }
+    }
+
+    //Update the heatslider
+    HeatSlider.value = heat;   
+    
+    if (firing && jammed == false) {
 
 		if (Time.time > lastFireTime + 1 / frequency) {
 			// Spawn visual bullet
@@ -62,26 +94,32 @@ function Update () {
 				bullet.dist = 1000;
 			}
 		}
+	    //Heat the gun.
+		heat += heatSpeed ;
 	}
 }
 
 function OnStartFire () {
-	if (Time.timeScale == 0)
-		return;
-
-	firing = true;
-
-	muzzleFlashFront.SetActive (true);
-
-	if (audio)
-		audio.Play ();
+    if (Time.timeScale == 0){
+        return;
+    }
+    
+    //added check to make sure gun isn't jammed before starting fire
+    if (jammed == false) {
+        firing = true;
+	    muzzleFlashFront.SetActive (true);
+	    if (audio) {
+	        audio.Play ();
+	    }
+	}    
 }
 
 function OnStopFire () {
-	firing = false;
+    firing = false;
 
-	muzzleFlashFront.SetActive (false);
+    muzzleFlashFront.SetActive (false);
 
-	if (audio)
-		audio.Stop ();
+	if (audio) {
+	    audio.Stop ();
+	}
 }

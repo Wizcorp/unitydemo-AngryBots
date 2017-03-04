@@ -5,9 +5,9 @@ using System.Collections;
 public class DemoControl : MonoBehaviour
 {
 	public Texture2D pauseIcon, menuBackground, resumeButton, restartButton, fullscreenButton, muteButton, quitButton;
-	
-	private const float cornerTextureSize = 48.0f;
-	private const float menuWidth = 200.0f, menuHeight = 241.0f, menuHeaderHeight = 26.0f, buttonWidth = 175.0f, buttonHeight = 30.0f;
+	//made the pause button and menu UI bigger for high res mobile screens.
+	private const float cornerTextureSize = 256.0f;
+	private const float menuWidth = 600.0f, menuHeight = 723.0f, menuHeaderHeight = 78.0f, buttonWidth = 525.0f, buttonHeight = 90.0f;
 	
 	private bool fullScreenAvailable = false, quitEnabled = true, directKeyQuit = true;
 	
@@ -41,12 +41,14 @@ public class DemoControl : MonoBehaviour
 	void Start ()
 	{
 		UpdateAudio ();
-		
-		switch (Application.platform)
+        
+
+        switch (Application.platform)
 		{
 			case RuntimePlatform.OSXWebPlayer:
 			case RuntimePlatform.WindowsWebPlayer:
-			case RuntimePlatform.NaCl:
+            case RuntimePlatform.Android:
+            case RuntimePlatform.NaCl:
 				fullScreenAvailable = true;
 				quitEnabled = false;
 				directKeyQuit = false;
@@ -91,7 +93,7 @@ public class DemoControl : MonoBehaviour
 	
 	void Update ()
 	{
-		if (directKeyQuit)
+        if (directKeyQuit)
 		{
 			if (Input.GetKeyDown (KeyCode.Escape))
 			{

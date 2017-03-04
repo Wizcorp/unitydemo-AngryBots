@@ -3,6 +3,8 @@
 
 public var playerHealth : Health;
 public var healthMaterial : Material;
+//adding the slider healthbar
+public var HealthSlider : UnityEngine.UI.Slider;
 
 private var healthBlink : float = 1.0f;
 private var oneOverMaxHealth : float = 0.5f;
@@ -14,7 +16,8 @@ function Start () {
 function Update () {
 	var relativeHealth : float = playerHealth.health * oneOverMaxHealth;
 	healthMaterial.SetFloat ("_SelfIllumination", relativeHealth * 2.0f * healthBlink);
-	
+    //Update the healthslider
+	HealthSlider.value = playerHealth.health;
 	if (relativeHealth < 0.45f) 
 		healthBlink = Mathf.PingPong (Time.time * 6.0f, 2.0f);
 	else 
