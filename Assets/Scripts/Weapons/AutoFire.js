@@ -108,7 +108,7 @@ function OnStartFire () {
     if (jammed == false) {
         firing = true;
 	    muzzleFlashFront.SetActive (true);
-	    if (audio){
+	    if (audio) {
 	        audio.Play ();
 	    }
 	}    
@@ -119,7 +119,7 @@ function OnStopFire () {
 
     muzzleFlashFront.SetActive (false);
 
-	if (audio){
+	if (audio) {
 	    audio.Stop ();
 	}
 }
